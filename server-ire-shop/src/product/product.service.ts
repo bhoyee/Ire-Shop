@@ -31,8 +31,17 @@ export class ProductService {
     
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: string) {
+    const findProduct = await this.productRepository.findOne({ where: { id: id } });
+    
+    // check if product exist 
+    if (!findProduct) {
+      throw new HttpException('No product found!!', HttpStatus.NOT_FOUND)
+    }
+
+    return findProduct;
+
+
   }
 
   //update product
