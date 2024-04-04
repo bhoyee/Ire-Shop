@@ -9,4 +9,25 @@ export class ProductEntity {
     @Column('text')
     title: string
 
+    @Column('text')
+    description: string
+
+    @Column('text')
+    imgUrl: string
+
+    @Column()
+    price: number
+
+    @Column()
+    quantity: number
+
+    @Column('text')
+    size: string
+
+    @Column('text')
+    color: string
+
+    @Column('text')
+    shippings: string
+
 }
