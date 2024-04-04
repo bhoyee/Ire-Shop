@@ -30,4 +30,10 @@ export class ProductEntity {
     @Column('text')
     shippings: string
 
+    @Column('text')
+    brands: string
+
+    @Column('text')
+    category: string
+
 }
