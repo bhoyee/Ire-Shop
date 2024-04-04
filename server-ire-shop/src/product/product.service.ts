@@ -13,6 +13,7 @@ export class ProductService {
     private productRepository: Repository<ProductEntity>
   ){}
 
+  //create product
   async create(createProductDto: CreateProductDto) {
     const {} = createProductDto;
     const newProduct = await this.productRepository.create({
@@ -24,6 +25,7 @@ export class ProductService {
     return newProduct;
   }
 
+  //find all prducts
   async findAll() {
     return await this.productRepository.find()
     
@@ -33,10 +35,52 @@ export class ProductService {
     return `This action returns a #${id} product`;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  //update product
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    const {
+      title, 
+      description, 
+      imgUrl1, 
+      price, 
+      quantity, 
+      size, 
+      color, 
+      shippings, 
+      sex, 
+      brands, 
+      category
+    } = updateProductDto;
+
+    const findProduct = await this.productRepository.findOne({ where: { id: id } });
+    
+    // check if product exist 
+    if (!findProduct) {
+      throw new HttpException('No product found!!', HttpStatus.NOT_FOUND)
+    }
+
+    let updateProduct: any = {}
+
+    title && (updateProduct.title = title);
+    description && (updateProduct.description = description);
+    imgUrl1 && (updateProduct.imgUrl1 = imgUrl1);
+    price && (updateProduct.price = price);
+    quantity && (updateProduct.quantity = quantity);
+    category && (updateProduct.category = category);
+    size && (updateProduct.size = size);
+    color && (updateProduct.color = color);
+    shippings && (updateProduct.shippings = shippings);
+    sex && (updateProduct.sex = sex);
+    brands && (updateProduct.brands = brands);
+
+    await this.productRepository.update({id: id}, updateProduct)
+
+    const findProductAgain = await this.productRepository.findOne({ where: { id: id } });
+
+    return findProductAgain
+
   }
 
+  //delete product
   async remove(id: string) {
     const findProduct = await this.productRepository.findOne({ where: { id: id } });
 
