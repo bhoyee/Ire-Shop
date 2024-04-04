@@ -13,7 +13,7 @@ export class ProductEntity {
     description: string
 
     @Column('text')
-    imgUrl: string
+    imgUrl1: string
 
     @Column()
     price: number
@@ -26,6 +26,9 @@ export class ProductEntity {
 
     @Column('text')
     color: string
+
+    @Column('text')
+    sex: string
 
     @Column('text')
     shippings: string
