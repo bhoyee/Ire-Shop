@@ -1,1 +1,37 @@
-export class CreateProductDto {}
+import { IsNumber, IsString, isNumber } from "class-validator"
+
+export class CreateProductDto {
+
+    @IsString()
+    title: string
+
+    @IsString()
+    description: string
+
+    @IsString()
+    imgUrl1: string
+
+    @IsNumber()
+    price: number
+
+    @IsNumber()
+    quantity: number
+
+    @IsString()
+    size: string
+
+    @IsString()
+    color: string
+
+    @IsString()
+    sex: string
+
+    @IsString()
+    shippings: string
+
+    @IsString()
+    brands: string
+
+    @IsString()
+    category: string
+}
