@@ -7,6 +7,8 @@ import { ProductService } from '../services/product.service';
   styleUrl: './product-list.component.css'
 })
 export class ProductListComponent implements OnInit {
+  
+  products: any;
 
   constructor(public productService: ProductService) {}
 
@@ -17,7 +19,7 @@ export class ProductListComponent implements OnInit {
 
   loadProducts() {
     return this.productService.getProducts().subscribe(
-      (data: any) =>console.log('data: ', data)
+      (data: any) => this.products = data
     )
 
   }
