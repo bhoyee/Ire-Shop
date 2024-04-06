@@ -1,21 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, getRepository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ProductEntity } from './entities/product.entity';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProductService {
-  
+
   constructor(
     @InjectRepository(ProductEntity)
     private productRepository: Repository<ProductEntity>
-  ){}
+  ) {}
 
-  //create product
   async create(createProductDto: CreateProductDto) {
-    const {} = createProductDto;
+    const {title, description, imgUrl1} = createProductDto;
     const newProduct = await this.productRepository.create({
       ...createProductDto
     })
@@ -25,26 +24,23 @@ export class ProductService {
     return newProduct;
   }
 
-  //find all prducts
   async findAll() {
-    return await this.productRepository.find()
+    return await this.productRepository.find();
+
     
   }
 
   async findOne(id: string) {
     const findProduct = await this.productRepository.findOne({ where: { id: id } });
-    
-    // check if product exist 
+
     if (!findProduct) {
       throw new HttpException('No product found!!', HttpStatus.NOT_FOUND)
     }
 
     return findProduct;
 
-
   }
 
-  //update product
   async update(id: string, updateProductDto: UpdateProductDto) {
     const {
       title, 
@@ -61,47 +57,63 @@ export class ProductService {
       subcategory
     } = updateProductDto;
 
-    const findProduct = await this.productRepository.findOne({ where: { id: id } });
-    
-    // check if product exist 
-    if (!findProduct) {
-      throw new HttpException('No product found!!', HttpStatus.NOT_FOUND)
-    }
+      const findProduct = await this.productRepository.findOne({ where: { id: id } });
 
-    let updateProduct: any = {}
+      if (!findProduct) {
+        throw new HttpException('No product found!!', HttpStatus.NOT_FOUND)
+      }
 
-    title && (updateProduct.title = title);
-    description && (updateProduct.description = description);
-    imgUrl1 && (updateProduct.imgUrl1 = imgUrl1);
-    price && (updateProduct.price = price);
-    quantity && (updateProduct.quantity = quantity);
-    category && (updateProduct.category = category);
-    size && (updateProduct.size = size);
-    color && (updateProduct.color = color);
-    shippings && (updateProduct.shippings = shippings);
-    sex && (updateProduct.sex = sex);
-    brands && (updateProduct.brands = brands);
-    subcategory && (updateProduct.subcategory = subcategory);
+      let updateProduct: any = {}
 
-    await this.productRepository.update({id: id}, updateProduct)
+      title && (updateProduct.title = title);
+      description && (updateProduct.description = description);
+      imgUrl1 && (updateProduct.imgUrl1 = imgUrl1);
+      price && (updateProduct.price = price);
+      quantity && (updateProduct.quantity = quantity);
+      size && (updateProduct.size = size);
+      color && (updateProduct.color = color);
+      shippings && (updateProduct.shippings = shippings);
+      sex && (updateProduct.sex = sex);
+      brands && (updateProduct.brands = brands);
+      category && (updateProduct.category = category);
+      subcategory && (updateProduct.subcategory = subcategory);
 
-    const findProductAgain = await this.productRepository.findOne({ where: { id: id } });
+      await this.productRepository.update({id: id}, updateProduct);
 
-    return findProductAgain
+      const findProductAgain = await this.productRepository.findOne({ where: { id: id } });
 
+      return findProductAgain;
   }
 
-  //delete product
   async remove(id: string) {
     const findProduct = await this.productRepository.findOne({ where: { id: id } });
 
-    // check if product exist 
     if (!findProduct) {
       throw new HttpException('No product found!!', HttpStatus.NOT_FOUND)
     }
 
     await this.productRepository.remove(findProduct)
 
-    return 'the product is deleted'
+    return 'the product is deleted.'
+
+  }
+  async findProductsByCategory(name: string): Promise<ProductEntity[]> {
+    const findProduct = await this.productRepository
+      .createQueryBuilder('product')
+      .where('product.subcategory = :name', { name })
+      .getMany();
+
+    console.log('name', name);
+    console.log('findProduct', findProduct);
+    
+    return findProduct;
+
+  // async findProductsBycategory(name: string) {
+  //   const findProduct = await getRepository(ProductEntity).createQueryBuilder('product')
+  //     .where("product.subcategory = :name", {name}).getMany()
+    
+  //     console.log('name', name)
+  //     console.log('findProduct', findProduct)
+  //     return findProduct
   }
 }

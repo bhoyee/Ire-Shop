@@ -1,7 +1,3 @@
-
-
-
-
 <div class="nav-bar">
     <div class="nav-bar-cart">
         <i class='bx bx-cart bx-sm'></i>
@@ -18,27 +14,21 @@
     <img class="banner" src="https://ik.imagekit.io/bprw8mk45/products/bags/bag_banner_EX3kwvE0J.png?ik-sdk-version=javascript-1.4.3&updatedAt=1653661978210" alt="">
 </div>
 
-<div *ngIf="product">
-    <div class="header">
-        <h4 class="collection-header">{{product.brands}}</h4>
-    </div>
-
-    <div class="product-list-container">
-        <div class="product-list">
-            <img class="product-img" [src]="product.imgUrl1" alt="">
-        </div>
-        <div class="product-price">
-            {{product.price}}
-        </div>
-    <div class="product-info">
-        {{product.description}}
-    </div>
-    </div>
-
-    <div class="buy-btn-container">
-        <button class="buy-btn">
-            Buy now
-        </button>
-    </div>
-
+<div class="header">
+    <h2 class="collection-header">{{routeName | titleTransform}}</h2>
 </div>
+
+    
+<div class="product-list-container" >
+    <div class="product-list" *ngFor="let product of subProducts">
+        <div class="product-container" [routerLink]="['/detail', product.id]">
+            <img class="product-img" [src]="product.imgUrl1" alt="">
+            <h5 class="product-list-text">{{product.brands}}</h5>
+        </div>
+    </div>
+    
+</div>
+    
+
+
+
